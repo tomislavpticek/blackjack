@@ -51,8 +51,7 @@ def calculate_hand_size(player):
   for card in player["cards"]:
     if(card["name"] != "CA" and card["name"] != "DA" and card["name"] != "HA" and card["name"] != "SA"):
       count += card["value"]
-      #print(f"Card: {card}")
-      #print(f"Regular card count: {count}")
+
 
   for card in player["cards"]:
     if(card["name"] == "CA" or card["name"] == "DA" or card["name"] == "HA" or card["name"] == "SA"):
@@ -60,8 +59,7 @@ def calculate_hand_size(player):
         count += 1
       else:
         count += 11
-     #print(f"Card: {card}")
-     #print(f"Speclial card count: {count}")
+
   
   return count
 
@@ -113,9 +111,9 @@ while True:
 
   start_game(players=players, pool_of_cards=pool_of_cards)
   
-  
-  while True:
-  
+  outcome = ""
+  while len(outcome) == 0:
+
     reset_screen(players, False)
     
     action = input("Hit (h) or stand (s): ")
@@ -134,9 +132,6 @@ while True:
   
     elif(action == "s"):
   
-      
-  
-      #print(f"{players['dealer']['cards'][0]['name']}, {players['dealer']['cards'][1]['name']}")
       while (calculate_hand_size(players["dealer"]) <= 16):
         players["dealer"]["cards"].append(deal_card(pool_of_cards))
         
@@ -144,34 +139,32 @@ while True:
       if(calculate_hand_size(players["dealer"]) > 21):
         players["player1"]["money"] += players["player1"]["bet"]*2
         players["player1"]["bet"] = 0
-        reset_screen(players, True)
-        print(f"Dealers {calculate_hand_size(players['dealer'])} vs your {calculate_hand_size(players['player1'])}")
-        print("You win.")
-        break
+        outcome = "You win."
+        
       
       elif(calculate_hand_size(players["dealer"]) > calculate_hand_size(players["player1"])):
         players["player1"]["bet"] = 0
-        reset_screen(players, True)
-        print(f"Dealers {calculate_hand_size(players['dealer'])} vs your {calculate_hand_size(players['player1'])}")
-        print("Dealer wins.")
-        break
+        outcome = "Dealer wins."
+        
   
       elif(calculate_hand_size(players["dealer"]) < calculate_hand_size(players["player1"])):
         players["player1"]["money"] += players["player1"]["bet"]*2
         players["player1"]["bet"] = 0
-        reset_screen(players, True)
-        print(f"Dealers {calculate_hand_size(players['dealer'])} vs your {calculate_hand_size(players['player1'])}")
-        print("You win.")
-        break
+        outcome = "You win."
+        
   
       elif(calculate_hand_size(players["dealer"]) == calculate_hand_size(players["player1"])):
         players["player1"]["money"] += players["player1"]["bet"]
         players["player1"]["bet"] = 0
         reset_screen(players, True)
         print(f"Dealers {calculate_hand_size(players['dealer'])} vs your {calculate_hand_size(players['player1'])}")
-        print("Draw.")
-        break
+        outcome = "Draw."
+        
   
+    reset_screen(players, True)
+    print(f"Dealers {calculate_hand_size(players['dealer'])} vs your {calculate_hand_size(players['player1'])}")
+    print(f"{outcome}\n")
+    
   cont = input("Continue n/y: ")
   
   if(cont=="n"):
